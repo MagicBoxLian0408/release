@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/lian2945/magicbox-release
+  IMAGE_NAME: ghcr.io/magicboxlian0408/release
 
 jobs:
   build-and-push:
