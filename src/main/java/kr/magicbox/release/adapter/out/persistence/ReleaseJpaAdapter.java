@@ -64,4 +64,14 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
                 .map(releaseMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Release> findAllByCursor(Long cursorId, int size) {
+        List<ReleaseEntity> entities = cursorId == null
+                ? releaseJpaRepository.findAllByOrderByIdDesc(PageRequest.of(0, size))
+                : releaseJpaRepository.findByIdLessThanOrderByIdDesc(cursorId, PageRequest.of(0, size));
+        return entities.stream()
+                .map(releaseMapper::toDomain)
+                .toList();
+    }
 }
