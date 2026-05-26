@@ -36,7 +36,7 @@ public class ReleaseQueryController {
     public ResponseEntity<CursorResponse<ReleaseResponse>> getAllReleases(
             @RequestParam(required = false) Long cursor,
             @RequestParam(defaultValue = CursorConstants.DEFAULT_SIZE) @CursorSize Integer size) {
-        List<ReleaseResponse> contents = getAllReleasesUseCase.getAllReleases(GetAllReleasesQuery.of(cursor, size + 1))
+        List<ReleaseResponse> contents = getAllReleasesUseCase.getAllReleases(GetAllReleasesQuery.of(cursor, size))
                 .stream()
                 .map(ReleaseResponse::from)
                 .toList();

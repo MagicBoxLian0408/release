@@ -19,7 +19,7 @@ public class GetAllReleasesService implements GetAllReleasesUseCase {
     @Transactional(readOnly = true)
     @Override
     public List<ReleaseResult> getAllReleases(GetAllReleasesQuery query) {
-        return releaseRepositoryPort.findAllByCursor(query.cursorId(), query.size())
+        return releaseRepositoryPort.findAllByCursor(query.cursorId(), query.size() + 1)
                 .stream()
                 .map(ReleaseResult::from)
                 .toList();
