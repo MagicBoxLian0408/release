@@ -20,4 +20,6 @@ public interface ReleaseRepositoryPort {
     long countByCreatorId(CreatorId creatorId);
 
     List<Release> findScheduledBefore(Instant scheduledAt, int limit);
+
+    List<Release> findAllByCursor(Long cursorId, int size);
 }

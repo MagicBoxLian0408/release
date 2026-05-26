@@ -18,4 +18,8 @@ public interface ReleaseJpaRepository extends JpaRepository<ReleaseEntity, Long>
     long countByCreatorId(Long creatorId);
 
     List<ReleaseEntity> findByStatusAndScheduledAtBefore(ReleaseStatus status, Instant scheduledAt, Pageable pageable);
+
+    List<ReleaseEntity> findByIdLessThanOrderByIdDesc(Long cursorId, Pageable pageable);
+
+    List<ReleaseEntity> findAllByOrderByIdDesc(Pageable pageable);
 }
