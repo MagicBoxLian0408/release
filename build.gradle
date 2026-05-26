@@ -25,6 +25,11 @@ ext {
     springCloudVersion = "2025.1.0"
 }
 
+configurations.all {
+    exclude group: 'com.fasterxml.jackson.datatype', module: 'jackson-datatype-jsr310'
+    exclude group: 'com.fasterxml.jackson.dataformat', module: 'jackson-dataformat-yaml'
+}
+
 dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
