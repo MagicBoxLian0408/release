@@ -77,4 +77,9 @@ public class ReleaseEntity extends BaseEntity {
         this.status = status;
         this.soldQuantity = soldQuantity;
     }
+
+    public void updateContent(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }

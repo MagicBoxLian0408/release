@@ -20,9 +20,9 @@ public class Release {
 
     private final ReleaseId id;
     private final CreatorId creatorId;
-    private final String title;
-    private final String description;
-    private final List<ReleaseMedia> mediaList;
+    private String title;
+    private String description;
+    private List<ReleaseMedia> mediaList;
     private final ReleaseLevel level;
     private ReleaseStatus status;
     private final Long price;
@@ -145,6 +145,16 @@ public class Release {
             throw new ReleaseStatusConflictException("판매 중 또는 매진 상태에서만 판매를 종료할 수 있습니다. 현재: " + this.status);
         }
         this.status = ReleaseStatus.ENDED;
+        this.updatedAt = Instant.now();
+    }
+
+    public void update(String title, String description, List<ReleaseMedia> mediaList) {
+        if (title != null && !title.isBlank()) this.title = title;
+        if (description != null) this.description = description;
+        if (mediaList != null && !mediaList.isEmpty()) {
+            validateMediaSortOrder(mediaList);
+            this.mediaList = List.copyOf(mediaList);
+        }
         this.updatedAt = Instant.now();
     }
 

@@ -1,21 +1,25 @@
 package kr.magicbox.release.domain.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kr.magicbox.release.domain.enums.ReleaseStatus;
 import lombok.Builder;
 
 import java.time.Instant;
+import java.util.List;
 
 @Builder
-public record ReleaseStatusUpdatedEvent(
+public record ReleaseUpdatedEvent(
         @JsonProperty("release_id") Long releaseId,
         @JsonProperty("creator_id") Long creatorId,
-        @JsonProperty("before_status") ReleaseStatus beforeStatus,
-        @JsonProperty("after_status") ReleaseStatus afterStatus,
-        @JsonProperty("sold_quantity") Integer soldQuantity,
-        @JsonProperty("limited_quantity") Integer limitedQuantity,
+        @JsonProperty("before") ReleaseSnapshot before,
+        @JsonProperty("after") ReleaseSnapshot after,
         @JsonProperty("occurred_at") Instant occurredAt
 ) implements ReleaseDomainEvent {
+
+    public record ReleaseSnapshot(
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("media_urls") List<String> mediaUrls
+    ) {}
 
     @Override
     public String key() {
@@ -24,6 +28,6 @@ public record ReleaseStatusUpdatedEvent(
 
     @Override
     public ReleaseDomainEventType eventType() {
-        return ReleaseDomainEventType.RELEASE_STATUS_UPDATED;
+        return ReleaseDomainEventType.RELEASE_UPDATED;
     }
 }

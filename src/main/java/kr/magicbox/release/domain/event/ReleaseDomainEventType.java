@@ -9,7 +9,7 @@ public enum ReleaseDomainEventType {
 
     RELEASE_CREATED("release-created"),
     RELEASE_DELETED("release-deleted"),
-    RELEASE_STATUS_UPDATED("release-status-updated");
+    RELEASE_UPDATED("release-updated");
 
     private final String value;
 }
