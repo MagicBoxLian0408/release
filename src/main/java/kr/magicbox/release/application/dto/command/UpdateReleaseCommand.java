@@ -1,0 +1,16 @@
+package kr.magicbox.release.application.dto.command;
+
+import kr.magicbox.release.domain.vo.ReleaseId;
+import kr.magicbox.release.domain.vo.UserId;
+import lombok.Builder;
+
+import java.util.List;
+
+@Builder
+public record UpdateReleaseCommand(
+        ReleaseId releaseId,
+        UserId userId,
+        String title,
+        String description,
+        List<MediaCommand> mediaList
+) {}
