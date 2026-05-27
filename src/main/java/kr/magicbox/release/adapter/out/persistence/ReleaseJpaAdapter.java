@@ -9,12 +9,15 @@ import kr.magicbox.release.domain.enums.ReleaseStatus;
 import kr.magicbox.release.domain.exception.ReleaseNotFoundException;
 import kr.magicbox.release.domain.vo.CreatorId;
 import kr.magicbox.release.domain.vo.ReleaseId;
+import kr.magicbox.release.domain.vo.ReleaseMedia;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -73,5 +76,23 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
         return entities.stream()
                 .map(releaseMapper::toDomain)
                 .toList();
+    }
+
+    private void syncMediaList(ReleaseEntity entity, List<ReleaseMedia> newMediaList) {
+        Set<String> incomingKeys = newMediaList.stream()
+                .map(m -> m.getMediaUrl() + "|" + m.getSortOrder())
+                .collect(Collectors.toSet());
+
+        entity.getReleaseMediaList().removeIf(existing ->
+                !incomingKeys.contains(existing.getMediaUrl() + "|" + existing.getSortOrder()));
+
+        Set<String> existingKeys = entity.getReleaseMediaList().stream()
+                .map(e -> e.getMediaUrl() + "|" + e.getSortOrder())
+                .collect(Collectors.toSet());
+
+        newMediaList.stream()
+                .filter(m -> !existingKeys.contains(m.getMediaUrl() + "|" + m.getSortOrder()))
+                .map(releaseMapper::toMediaEntity)
+                .forEach(entity::addMedia);
     }
 }
