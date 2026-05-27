@@ -41,7 +41,7 @@ public class Release {
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
-        this.mediaList = mediaList;
+        this.mediaList = List.copyOf(mediaList);
         this.level = level != null ? level : ReleaseLevel.BEGINNER;
         this.status = ReleaseStatus.SCHEDULED;
         this.price = price;
@@ -63,7 +63,7 @@ public class Release {
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
-        this.mediaList = mediaList != null ? mediaList : List.of();
+        this.mediaList = mediaList != null ? List.copyOf(mediaList) : List.of();
         this.level = level;
         this.status = status;
         this.price = price;
