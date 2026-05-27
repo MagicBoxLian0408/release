@@ -6,10 +6,14 @@ import kr.magicbox.release.domain.exception.InvalidFieldException;
 import kr.magicbox.release.domain.exception.ReleaseStatusConflictException;
 import kr.magicbox.release.domain.vo.CreatorId;
 import kr.magicbox.release.domain.vo.ReleaseId;
+import kr.magicbox.release.domain.vo.ReleaseMedia;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 public class Release {
@@ -18,7 +22,7 @@ public class Release {
     private final CreatorId creatorId;
     private final String title;
     private final String description;
-    private final String thumbnailUrl;
+    private final List<ReleaseMedia> mediaList;
     private final ReleaseLevel level;
     private ReleaseStatus status;
     private final Long price;
@@ -30,14 +34,14 @@ public class Release {
 
     @Builder(builderMethodName = "createBuilder", builderClassName = "CreateBuilder")
     public Release(CreatorId creatorId, String title, String description,
-                   String thumbnailUrl, ReleaseLevel level, Long price,
+                   List<ReleaseMedia> mediaList, ReleaseLevel level, Long price,
                    Integer limitedQuantity, Instant scheduledAt) {
-        validateCreate(creatorId, title, price, limitedQuantity, scheduledAt);
+        validateCreate(creatorId, title, price, limitedQuantity, scheduledAt, mediaList);
         this.id = null;
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
+        this.mediaList = mediaList;
         this.level = level != null ? level : ReleaseLevel.BEGINNER;
         this.status = ReleaseStatus.SCHEDULED;
         this.price = price;
@@ -50,7 +54,7 @@ public class Release {
 
     @Builder(builderMethodName = "reconstructBuilder", builderClassName = "ReconstructBuilder")
     public Release(ReleaseId id, CreatorId creatorId, String title, String description,
-                   String thumbnailUrl, ReleaseLevel level, ReleaseStatus status,
+                   List<ReleaseMedia> mediaList, ReleaseLevel level, ReleaseStatus status,
                    Long price, Integer limitedQuantity, Integer soldQuantity,
                    Instant scheduledAt, Instant createdAt, Instant updatedAt) {
         validateReconstruct(id, creatorId, title, level, status, price, limitedQuantity, soldQuantity,
@@ -59,7 +63,7 @@ public class Release {
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
+        this.mediaList = mediaList != null ? mediaList : List.of();
         this.level = level;
         this.status = status;
         this.price = price;
@@ -71,12 +75,15 @@ public class Release {
     }
 
     private void validateCreate(CreatorId creatorId, String title, Long price,
-                                Integer limitedQuantity, Instant scheduledAt) {
+                                Integer limitedQuantity, Instant scheduledAt,
+                                List<ReleaseMedia> mediaList) {
         if (creatorId == null) throw new InvalidFieldException("크리에이터 ID는 필수입니다.");
         if (title == null || title.isBlank()) throw new InvalidFieldException("제목은 필수입니다.");
         if (price == null || price <= 0) throw new InvalidFieldException("가격은 양수여야 합니다.");
         if (limitedQuantity == null || limitedQuantity <= 0) throw new InvalidFieldException("한정 수량은 양수여야 합니다.");
         if (scheduledAt == null) throw new InvalidFieldException("판매 예정 시각은 필수입니다.");
+        if (mediaList == null || mediaList.isEmpty()) throw new InvalidFieldException("미디어는 하나 이상 필수입니다.");
+        validateMediaSortOrder(mediaList);
     }
 
     private void validateReconstruct(ReleaseId id, CreatorId creatorId, String title,
@@ -94,6 +101,15 @@ public class Release {
         if (scheduledAt == null) throw new InvalidFieldException("판매 예정 시각은 필수입니다.");
         if (createdAt == null) throw new InvalidFieldException("생성 시각은 필수입니다.");
         if (updatedAt == null) throw new InvalidFieldException("수정 시각은 필수입니다.");
+    }
+
+    private void validateMediaSortOrder(List<ReleaseMedia> mediaList) {
+        Set<Integer> sortOrders = mediaList.stream()
+                .map(ReleaseMedia::getSortOrder)
+                .collect(Collectors.toSet());
+        if (sortOrders.size() != mediaList.size()) {
+            throw new InvalidFieldException("미디어 정렬 순서는 중복될 수 없습니다.");
+        }
     }
 
     public void startSale() {
