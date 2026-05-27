@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,9 +29,6 @@ public class ReleaseEntity extends BaseEntity {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "level", nullable = false)
@@ -51,20 +50,27 @@ public class ReleaseEntity extends BaseEntity {
     @Column(name = "scheduled_at", nullable = false)
     private Instant scheduledAt;
 
+    @OneToMany(mappedBy = "release", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReleaseMediaEntity> releaseMediaList = new ArrayList<>();
+
     @Builder
-    public ReleaseEntity(Long creatorId, String title, String description, String thumbnailUrl,
+    public ReleaseEntity(Long creatorId, String title, String description,
                          ReleaseLevel level, ReleaseStatus status, Long price,
                          Integer limitedQuantity, Integer soldQuantity, Instant scheduledAt) {
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
         this.level = level;
         this.status = status;
         this.price = price;
         this.limitedQuantity = limitedQuantity;
         this.soldQuantity = soldQuantity;
         this.scheduledAt = scheduledAt;
+    }
+
+    public void addMedia(ReleaseMediaEntity media) {
+        media.assignRelease(this);
+        this.releaseMediaList.add(media);
     }
 
     public void update(ReleaseStatus status, Integer soldQuantity) {
