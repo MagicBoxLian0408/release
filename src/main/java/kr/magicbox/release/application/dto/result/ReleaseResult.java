@@ -6,6 +6,7 @@ import kr.magicbox.release.domain.enums.ReleaseStatus;
 import lombok.Builder;
 
 import java.time.Instant;
+import java.util.List;
 
 @Builder
 public record ReleaseResult(
@@ -13,7 +14,7 @@ public record ReleaseResult(
         Long creatorId,
         String title,
         String description,
-        String thumbnailUrl,
+        List<ReleaseMediaResult> mediaList,
         ReleaseLevel level,
         ReleaseStatus status,
         Long price,
@@ -28,12 +29,15 @@ public record ReleaseResult(
     }
 
     public static ReleaseResult from(Release release) {
+        List<ReleaseMediaResult> mediaList = release.getMediaList().stream()
+                .map(ReleaseMediaResult::from)
+                .toList();
         return ReleaseResult.builder()
                 .releaseId(release.getId().value())
                 .creatorId(release.getCreatorId().value())
                 .title(release.getTitle())
                 .description(release.getDescription())
-                .thumbnailUrl(release.getThumbnailUrl())
+                .mediaList(mediaList)
                 .level(release.getLevel())
                 .status(release.getStatus())
                 .price(release.getPrice())
