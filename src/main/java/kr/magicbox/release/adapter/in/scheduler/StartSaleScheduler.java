@@ -23,9 +23,12 @@ public class StartSaleScheduler {
         if (!lock.tryLock()) {
             return;
         }
-        log.info("[Scheduler] 판매 예정 릴리즈 자동 오픈 시작");
-        autoStartSaleUseCase.autoStartScheduledReleases();
-        lock.unlock();
-        log.info("[Scheduler] 판매 예정 릴리즈 자동 오픈 완료");
+        try {
+            log.info("[Scheduler] 판매 예정 릴리즈 자동 오픈 시작");
+            autoStartSaleUseCase.autoStartScheduledReleases();
+            log.info("[Scheduler] 판매 예정 릴리즈 자동 오픈 완료");
+        } finally {
+            lock.unlock();
+        }
     }
 }
