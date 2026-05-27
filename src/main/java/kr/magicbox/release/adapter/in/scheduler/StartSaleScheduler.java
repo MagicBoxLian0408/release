@@ -8,21 +8,18 @@ import org.redisson.api.RedissonClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class StartSaleScheduler {
 
-    private static final String LOCK_KEY = "lock:autoStartScheduledReleases";
-
     private final AutoStartSaleUseCase autoStartSaleUseCase;
     private final RedissonClient redissonClient;
+    private final SchedulerProperties schedulerProperties;
 
     @Scheduled(cron = "0 */10 * * * *")
     public void autoStartScheduledReleases() {
-        RLock lock = redissonClient.getLock(LOCK_KEY);
+        RLock lock = redissonClient.getLock(schedulerProperties.getAutoStartSaleLockKey());
         if (!lock.tryLock()) {
             return;
         }

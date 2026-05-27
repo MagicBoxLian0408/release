@@ -72,3 +72,6 @@ resilience4j:
 
 inbox:
   max-event-age-minutes: 60
+
+scheduler:
+  auto-start-sale-lock-key: lock:autoStartScheduledReleases
