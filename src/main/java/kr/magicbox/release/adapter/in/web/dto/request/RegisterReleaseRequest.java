@@ -1,5 +1,6 @@
 package kr.magicbox.release.adapter.in.web.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import kr.magicbox.release.adapter.in.web.validation.ScheduledAtMultipleOfTenMinutes;
 import kr.magicbox.release.application.dto.command.MediaCommand;
@@ -14,7 +15,7 @@ public record RegisterReleaseRequest(
         @NotBlank(message = "제목은 필수입니다.") String title,
         String description,
         @NotEmpty(message = "미디어는 하나 이상 필수입니다.")
-        List<@NotNull(message = "미디어 항목은 null일 수 없습니다.") MediaRequest> mediaList,
+        List<@Valid @NotNull(message = "미디어 항목은 null일 수 없습니다.") MediaRequest> mediaList,
         ReleaseLevel level,
         @NotNull(message = "가격은 필수입니다.") @Min(value = 1, message = "가격은 1원 이상이어야 합니다.") Long price,
         @NotNull(message = "한정 수량은 필수입니다.") @Min(value = 1, message = "한정 수량은 1 이상이어야 합니다.") Integer limitedQuantity,
