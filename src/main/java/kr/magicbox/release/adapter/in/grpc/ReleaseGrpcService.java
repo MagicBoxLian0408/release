@@ -87,7 +87,7 @@ public class ReleaseGrpcService extends ReleaseServiceGrpc.ReleaseServiceImplBas
         return Release.newBuilder()
                 .setReleaseId(result.releaseId())
                 .setTitle(result.title())
-                .setThumbnailUrl(result.thumbnailUrl() != null ? result.thumbnailUrl() : "")
+                .addAllMediaUrls(result.mediaList().stream().map(m -> m.mediaUrl()).toList())
                 .setLevel(toProtoLevel(result.level()))
                 .setPrice(result.price())
                 .setCreatedAt(Timestamp.newBuilder()
