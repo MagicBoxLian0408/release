@@ -49,11 +49,6 @@ spring:
       ddl-auto: update
     open-in-view: false
 
-security:
-  trusted:
-    ips:
-      - ${TRUSTED_IP_GATEWAY}
-
 resilience4j:
   circuitbreaker:
     instances:
