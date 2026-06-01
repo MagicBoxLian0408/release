@@ -9,7 +9,9 @@ public enum ReleaseDomainEventType {
 
     RELEASE_CREATED("release-created"),
     RELEASE_DELETED("release-deleted"),
-    RELEASE_UPDATED("release-updated");
+    RELEASE_UPDATED("release-updated"),
+    STOCK_RESERVE_SUCCEEDED("stock-reserve-succeeded"),
+    STOCK_RESERVE_FAILED("stock-reserve-failed");
 
     private final String value;
 }
