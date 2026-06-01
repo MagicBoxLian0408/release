@@ -65,6 +65,7 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
                 .eventId(event.orderId())
                 .orderId(event.orderId())
                 .customerId(event.customerId())
+                .totalAmount(event.totalAmount())
                 .occurredAt(Instant.now())
                 .build());
     }
