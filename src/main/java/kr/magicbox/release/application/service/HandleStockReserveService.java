@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -40,12 +42,18 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
             return;
         }
 
+        List<StockReserveSucceededEvent.ItemPayload> succeededItems = new ArrayList<>();
         for (StockReserveCommandEvent.ItemPayload item : event.items()) {
             Long releaseId = item.productId();
             try {
                 Release release = releaseRepositoryPort.findById(ReleaseId.of(releaseId));
                 release.increaseSoldQuantity();
                 releaseRepositoryPort.update(release);
+                succeededItems.add(StockReserveSucceededEvent.ItemPayload.builder()
+                        .orderLineId(item.orderLineId())
+                        .sellerId(release.getCreatorId().value())
+                        .amount((long) item.quantity() * item.unitPrice())
+                        .build());
             } catch (ReleaseNotFoundException | ReleaseStatusConflictException e) {
                 log.warn("[StockReserve] 재고 예약 실패. orderId={}, releaseId={}, reason={}",
                         event.orderId(), releaseId, e.getMessage());
@@ -66,6 +74,7 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
                 .orderId(event.orderId())
                 .customerId(event.customerId())
                 .totalAmount(event.totalAmount())
+                .items(succeededItems)
                 .occurredAt(Instant.now())
                 .build());
     }
