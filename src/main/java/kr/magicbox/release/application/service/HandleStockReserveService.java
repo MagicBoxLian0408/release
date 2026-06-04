@@ -33,7 +33,6 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
         if (event.items() == null || event.items().isEmpty()) {
             log.warn("[StockReserve] items 없음. orderId={}", event.orderId());
             releaseOutboxPort.save(StockReserveFailedEvent.builder()
-                    .eventId(event.orderId())
                     .orderId(event.orderId())
                     .customerId(event.customerId())
                     .reason("items 없음")
@@ -58,7 +57,6 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
                 log.warn("[StockReserve] 재고 예약 실패. orderId={}, releaseId={}, reason={}",
                         event.orderId(), releaseId, e.getMessage());
                 releaseOutboxPort.save(StockReserveFailedEvent.builder()
-                        .eventId(event.orderId())
                         .orderId(event.orderId())
                         .customerId(event.customerId())
                         .reason(e.getMessage())
@@ -70,7 +68,6 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
 
         log.info("[StockReserve] 재고 예약 성공. orderId={}", event.orderId());
         releaseOutboxPort.save(StockReserveSucceededEvent.builder()
-                .eventId(event.orderId())
                 .orderId(event.orderId())
                 .customerId(event.customerId())
                 .totalAmount(event.totalAmount())
