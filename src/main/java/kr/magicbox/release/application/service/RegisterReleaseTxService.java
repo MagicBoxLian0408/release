@@ -51,6 +51,7 @@ public class RegisterReleaseTxService {
                 .title(command.title())
                 .description(command.description())
                 .level(command.level())
+                .status(release.getStatus())
                 .price(command.price())
                 .limitedQuantity(command.limitedQuantity())
                 .scheduledAt(command.scheduledAt())
