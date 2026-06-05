@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
 public record ReleaseSoldQuantityIncreaseEvent(
-        @JsonProperty("event_id") Long eventId,
         @JsonProperty("release_id") Long releaseId,
         @JsonProperty("occurred_at") Instant occurredAt
 ) implements InboxEvent {
