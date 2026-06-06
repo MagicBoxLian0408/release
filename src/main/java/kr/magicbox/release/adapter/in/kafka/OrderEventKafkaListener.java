@@ -22,7 +22,7 @@ public class OrderEventKafkaListener {
     @KafkaListener(topics = "outbox.event.release-sold-quantity-increase", groupId = "release-service")
     public void handleReleaseSoldQuantityIncrease(
             ConsumerRecord<String, ReleaseSoldQuantityIncreaseEvent> consumerRecord) {
-        log.info("[Inbox] release-sold-quantity-increase 이벤트 수신. eventId={}", consumerRecord.key());
+        log.info("[Inbox] release-sold-quantity-increase 이벤트 수신. key={}", consumerRecord.key());
         handleReleaseSoldQuantityIncreaseUseCase.handleReleaseSoldQuantityIncrease(
                 consumerRecord.value().releaseId());
     }

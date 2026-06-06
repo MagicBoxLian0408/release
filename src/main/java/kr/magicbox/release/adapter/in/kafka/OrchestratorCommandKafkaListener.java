@@ -21,7 +21,7 @@ public class OrchestratorCommandKafkaListener {
     @RetryableTopic
     @KafkaListener(topics = "outbox.event.stock-reserve", groupId = "release-service")
     public void handleStockReserve(ConsumerRecord<String, StockReserveCommandEvent> consumerRecord) {
-        log.info("[Inbox] stock-reserve 커맨드 수신. eventId={}", consumerRecord.key());
+        log.info("[Inbox] stock-reserve 커맨드 수신. key={}", consumerRecord.key());
         handleStockReserveUseCase.handleStockReserve(consumerRecord.value());
     }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 
 @Builder
 public record StockReserveSucceededEvent(
-        @JsonProperty("event_id") Long eventId,
         @JsonProperty("order_id") Long orderId,
         @JsonProperty("customer_id") Long customerId,
         @JsonProperty("total_amount") Long totalAmount,
