@@ -16,32 +16,6 @@ spring:
           negotiation-type: plaintext
           keep-alive-time: 30s
           keep-alive-timeout: 5s
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-    listener:
-      ack-mode: record
-      missing-topics-fatal: false
-    consumer:
-      group-id: release-service
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
-        spring.json.trusted.packages: "kr.magicbox.release.adapter.in.kafka.event"
-        spring.json.type.mapping: release-sold-quantity-increase:kr.magicbox.release.adapter.in.kafka.event.ReleaseSoldQuantityIncreaseEvent,stock-reserve:kr.magicbox.release.adapter.in.kafka.event.StockReserveCommandEvent
-    retry:
-      topic:
-        attempts: 3
-        backoff:
-          delay: 1s
-          max-delay: 3s
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
-      timeout: 2000ms
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
@@ -76,9 +50,3 @@ resilience4j:
     instances:
       creatorService:
         timeout-duration: 2s
-
-inbox:
-  max-event-age-minutes: 5
-
-scheduler:
-  auto-start-sale-lock-key: lock:autoStartScheduledReleases
