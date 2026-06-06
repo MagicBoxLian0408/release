@@ -51,7 +51,7 @@ public class IdempotentAspect {
         }
 
         return transactionTemplate.execute(status -> {
-            if (releaseInboxRepository.existsByKafkaKey(key)) {
+            if (releaseInboxRepository.existsByKey(key)) {
                 log.warn("[Inbox] 중복 메시지 폐기. key={}", key);
                 return null;
             }
