@@ -27,6 +27,7 @@ public interface ReleaseJpaRepository extends JpaRepository<ReleaseEntity, Long>
             WHERE r IN (
                 SELECT r2 FROM ReleaseEntity r2
                 WHERE r2.status = :status AND r2.scheduledAt < :scheduledAt
+                ORDER BY r2.id ASC
                 LIMIT :limit
             )
             """)
