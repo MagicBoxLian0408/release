@@ -21,7 +21,16 @@ public interface ReleaseJpaRepository extends JpaRepository<ReleaseEntity, Long>
 
     long countByCreatorId(Long creatorId);
 
-    List<ReleaseEntity> findByStatusAndScheduledAtBefore(ReleaseStatus status, Instant scheduledAt, Pageable pageable);
+    @Query("""
+            SELECT DISTINCT r FROM ReleaseEntity r
+            LEFT JOIN FETCH r.releaseMediaList
+            WHERE r IN (
+                SELECT r2 FROM ReleaseEntity r2
+                WHERE r2.status = :status AND r2.scheduledAt < :scheduledAt
+                LIMIT :limit
+            )
+            """)
+    List<ReleaseEntity> findByStatusAndScheduledAtBefore(@Param("status") ReleaseStatus status, @Param("scheduledAt") Instant scheduledAt, @Param("limit") int limit);
 
     @Query("SELECT DISTINCT r FROM ReleaseEntity r LEFT JOIN FETCH r.releaseMediaList WHERE r.id < :cursorId ORDER BY r.id DESC")
     List<ReleaseEntity> findByIdLessThanOrderByIdDesc(@Param("cursorId") Long cursorId, Pageable pageable);
