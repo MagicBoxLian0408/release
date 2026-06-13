@@ -64,7 +64,7 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
 
     @Override
     public List<Release> findScheduledBefore(Instant scheduledAt, int limit) {
-        return releaseJpaRepository.findByStatusAndScheduledAtBefore(ReleaseStatus.SCHEDULED, scheduledAt, limit)
+        return releaseJpaRepository.findByStatusAndScheduledAtBefore(ReleaseStatus.SCHEDULED, scheduledAt, PageRequest.of(0, limit))
                 .stream()
                 .map(releaseMapper::toDomain)
                 .toList();
