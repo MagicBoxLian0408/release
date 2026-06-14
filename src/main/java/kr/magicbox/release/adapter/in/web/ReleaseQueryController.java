@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/release")
 @RequiredArgsConstructor
 @Validated
 public class ReleaseQueryController {
