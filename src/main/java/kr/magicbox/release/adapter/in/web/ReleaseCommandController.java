@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/release")
 @RequiredArgsConstructor
 @Validated
 public class ReleaseCommandController {
@@ -21,7 +22,7 @@ public class ReleaseCommandController {
     private final RegisterReleaseUseCase registerReleaseUseCase;
     private final UpdateReleaseUseCase updateReleaseUseCase;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Void> registerRelease(
             @AuthenticationPrincipal UserId userId,
             @Valid @RequestBody RegisterReleaseRequest request

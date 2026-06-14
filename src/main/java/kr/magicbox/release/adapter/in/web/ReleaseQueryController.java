@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/release")
 @RequiredArgsConstructor
 @Validated
 public class ReleaseQueryController {
@@ -31,7 +32,7 @@ public class ReleaseQueryController {
         return ResponseEntity.ok(ReleaseResponse.from(result));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<CursorResponse<ReleaseResponse>> getAllReleases(
             @RequestParam(required = false) Long cursor,
             @RequestParam(defaultValue = CursorConstants.DEFAULT_SIZE) @CursorSize Integer size) {
