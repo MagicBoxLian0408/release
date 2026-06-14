@@ -149,6 +149,9 @@ public class Release {
     }
 
     public void update(String title, String description, List<ReleaseMedia> mediaList) {
+        if (this.status != ReleaseStatus.SCHEDULED) {
+            throw new ReleaseStatusConflictException("판매 예정 상태에서만 수정할 수 있습니다. 현재: " + this.status);
+        }
         if (title != null && !title.isBlank()) this.title = title;
         if (description != null) this.description = description;
         if (mediaList != null && !mediaList.isEmpty()) {
