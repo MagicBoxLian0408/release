@@ -164,4 +164,13 @@ public class Release {
     public boolean isOnSale() {
         return this.status == ReleaseStatus.ON_SALE;
     }
+
+    public void validateStockAvailable() {
+        if (this.status != ReleaseStatus.ON_SALE) {
+            throw new ReleaseStatusConflictException("판매 중 상태에서만 재고 예약이 가능합니다. 현재: " + this.status);
+        }
+        if (this.soldQuantity >= this.limitedQuantity) {
+            throw new ReleaseStatusConflictException("재고가 부족합니다. limitedQuantity=" + this.limitedQuantity + ", soldQuantity=" + this.soldQuantity);
+        }
+    }
 }

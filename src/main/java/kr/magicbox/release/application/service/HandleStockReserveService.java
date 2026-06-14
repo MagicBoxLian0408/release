@@ -46,8 +46,7 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
             Long releaseId = item.productId();
             try {
                 Release release = releaseRepositoryPort.findById(ReleaseId.of(releaseId));
-                release.increaseSoldQuantity();
-                releaseRepositoryPort.update(release);
+                release.validateStockAvailable();
                 succeededItems.add(StockReserveSucceededEvent.ItemPayload.builder()
                         .orderLineId(item.orderLineId())
                         .sellerId(release.getCreatorId().value())
