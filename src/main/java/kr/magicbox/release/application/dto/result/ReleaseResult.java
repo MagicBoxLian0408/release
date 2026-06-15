@@ -1,12 +1,14 @@
 package kr.magicbox.release.application.dto.result;
 
 import kr.magicbox.release.domain.aggregate.Release;
+import kr.magicbox.release.domain.enums.MagicGenre;
 import kr.magicbox.release.domain.enums.ReleaseLevel;
 import kr.magicbox.release.domain.enums.ReleaseStatus;
 import lombok.Builder;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 public record ReleaseResult(
@@ -20,6 +22,7 @@ public record ReleaseResult(
         Long price,
         Integer limitedQuantity,
         Integer soldQuantity,
+        Set<MagicGenre> categories,
         Instant scheduledAt,
         Instant createdAt,
         Instant updatedAt
@@ -43,6 +46,7 @@ public record ReleaseResult(
                 .price(release.getPrice())
                 .limitedQuantity(release.getLimitedQuantity())
                 .soldQuantity(release.getSoldQuantity())
+                .categories(release.getCategories())
                 .scheduledAt(release.getScheduledAt())
                 .createdAt(release.getCreatedAt())
                 .updatedAt(release.getUpdatedAt())

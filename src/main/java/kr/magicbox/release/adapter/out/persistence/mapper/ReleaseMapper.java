@@ -23,6 +23,7 @@ public class ReleaseMapper {
                 .price(domain.getPrice())
                 .limitedQuantity(domain.getLimitedQuantity())
                 .soldQuantity(domain.getSoldQuantity())
+                .categories(domain.getCategories())
                 .scheduledAt(domain.getScheduledAt())
                 .build();
 
@@ -57,6 +58,7 @@ public class ReleaseMapper {
                 .price(entity.getPrice())
                 .limitedQuantity(entity.getLimitedQuantity())
                 .soldQuantity(entity.getSoldQuantity())
+                .categories(entity.getCategories())
                 .scheduledAt(entity.getScheduledAt())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())

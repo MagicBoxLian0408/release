@@ -48,7 +48,7 @@ public class UpdateReleaseService implements UpdateReleaseUseCase {
                 .map(list -> list.stream().map(this::toReleaseMedia).toList())
                 .orElse(null);
 
-        release.update(command.title(), command.description(), command.price(), command.limitedQuantity(), command.level(), mediaList);
+        release.update(command.title(), command.description(), command.price(), command.limitedQuantity(), command.level(), mediaList, command.categories());
         releaseRepositoryPort.update(release);
 
         ReleaseSnapshot after = new ReleaseSnapshot(
