@@ -12,5 +12,7 @@ public record UpdateReleaseCommand(
         UserId userId,
         String title,
         String description,
+        Long price,
+        Integer limitedQuantity,
         List<MediaCommand> mediaList
 ) {}

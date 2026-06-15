@@ -11,6 +11,8 @@ import java.util.List;
 public record UpdateReleaseRequest(
         String title,
         String description,
+        Long price,
+        Integer limitedQuantity,
         List<@Valid MediaRequest> mediaList
 ) {
     public UpdateReleaseCommand toCommand(Long releaseId, UserId userId) {
@@ -22,6 +24,8 @@ public record UpdateReleaseRequest(
                 .userId(userId)
                 .title(title)
                 .description(description)
+                .price(price)
+                .limitedQuantity(limitedQuantity)
                 .mediaList(mediaCommands)
                 .build();
     }
