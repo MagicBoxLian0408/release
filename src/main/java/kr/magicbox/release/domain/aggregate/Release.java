@@ -25,8 +25,8 @@ public class Release {
     private List<ReleaseMedia> mediaList;
     private final ReleaseLevel level;
     private ReleaseStatus status;
-    private final Long price;
-    private final Integer limitedQuantity;
+    private Long price;
+    private Integer limitedQuantity;
     private Integer soldQuantity;
     private final Instant scheduledAt;
     private final Instant createdAt;
@@ -148,9 +148,16 @@ public class Release {
         this.updatedAt = Instant.now();
     }
 
-    public void update(String title, String description, List<ReleaseMedia> mediaList) {
+    public void update(String title, String description, Long price, Integer limitedQuantity, List<ReleaseMedia> mediaList) {
         if (title != null && !title.isBlank()) this.title = title;
         if (description != null) this.description = description;
+        if (price != null) this.price = price;
+        if (limitedQuantity != null) {
+            this.limitedQuantity = limitedQuantity;
+            if (this.status == ReleaseStatus.SOLD_OUT && this.soldQuantity < this.limitedQuantity) {
+                this.status = ReleaseStatus.ON_SALE;
+            }
+        }
         if (mediaList != null && !mediaList.isEmpty()) {
             validateMediaSortOrder(mediaList);
             this.mediaList = List.copyOf(mediaList);
