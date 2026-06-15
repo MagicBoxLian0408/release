@@ -23,7 +23,7 @@ public class Release {
     private String title;
     private String description;
     private List<ReleaseMedia> mediaList;
-    private final ReleaseLevel level;
+    private ReleaseLevel level;
     private ReleaseStatus status;
     private Long price;
     private Integer limitedQuantity;
@@ -148,7 +148,7 @@ public class Release {
         this.updatedAt = Instant.now();
     }
 
-    public void update(String title, String description, Long price, Integer limitedQuantity, List<ReleaseMedia> mediaList) {
+    public void update(String title, String description, Long price, Integer limitedQuantity, ReleaseLevel level, List<ReleaseMedia> mediaList) {
         if (title != null && !title.isBlank()) this.title = title;
         if (description != null) this.description = description;
         if (price != null) this.price = price;
@@ -158,6 +158,7 @@ public class Release {
                 this.status = ReleaseStatus.ON_SALE;
             }
         }
+        if (level != null) this.level = level;
         if (mediaList != null && !mediaList.isEmpty()) {
             validateMediaSortOrder(mediaList);
             this.mediaList = List.copyOf(mediaList);

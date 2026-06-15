@@ -3,6 +3,7 @@ package kr.magicbox.release.adapter.in.web.dto.request;
 import jakarta.validation.Valid;
 import kr.magicbox.release.application.dto.command.MediaCommand;
 import kr.magicbox.release.application.dto.command.UpdateReleaseCommand;
+import kr.magicbox.release.domain.enums.ReleaseLevel;
 import kr.magicbox.release.domain.vo.ReleaseId;
 import kr.magicbox.release.domain.vo.UserId;
 
@@ -13,6 +14,7 @@ public record UpdateReleaseRequest(
         String description,
         Long price,
         Integer limitedQuantity,
+        ReleaseLevel level,
         List<@Valid MediaRequest> mediaList
 ) {
     public UpdateReleaseCommand toCommand(Long releaseId, UserId userId) {
@@ -26,6 +28,7 @@ public record UpdateReleaseRequest(
                 .description(description)
                 .price(price)
                 .limitedQuantity(limitedQuantity)
+                .level(level)
                 .mediaList(mediaCommands)
                 .build();
     }
