@@ -78,8 +78,11 @@ public class ReleaseEntity extends BaseEntity {
         this.soldQuantity = soldQuantity;
     }
 
-    public void updateContent(String title, String description) {
+    public void updateContent(String title, String description, Long price, Integer limitedQuantity, ReleaseLevel level) {
         this.title = title;
         this.description = description;
+        if (price != null) this.price = price;
+        if (limitedQuantity != null) this.limitedQuantity = limitedQuantity;
+        if (level != null) this.level = level;
     }
 }
