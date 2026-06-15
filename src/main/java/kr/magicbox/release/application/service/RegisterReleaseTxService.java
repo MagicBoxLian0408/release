@@ -37,6 +37,7 @@ public class RegisterReleaseTxService {
                 .level(command.level())
                 .price(command.price())
                 .limitedQuantity(command.limitedQuantity())
+                .categories(command.categories())
                 .scheduledAt(command.scheduledAt())
                 .build();
         Long releaseId = releaseRepositoryPort.save(release);

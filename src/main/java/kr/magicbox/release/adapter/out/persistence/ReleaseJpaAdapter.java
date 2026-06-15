@@ -37,7 +37,7 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
         ReleaseEntity entity = releaseJpaRepository.findById(release.getId().value())
                 .orElseThrow(ReleaseNotFoundException::new);
         entity.update(release.getStatus(), release.getSoldQuantity());
-        entity.updateContent(release.getTitle(), release.getDescription(), release.getPrice(), release.getLimitedQuantity(), release.getLevel());
+        entity.updateContent(release.getTitle(), release.getDescription(), release.getPrice(), release.getLimitedQuantity(), release.getLevel(), release.getCategories());
         syncMediaList(entity, release.getMediaList());
         releaseJpaRepository.save(entity);
     }

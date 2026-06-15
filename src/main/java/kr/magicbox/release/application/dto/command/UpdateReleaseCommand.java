@@ -1,11 +1,13 @@
 package kr.magicbox.release.application.dto.command;
 
+import kr.magicbox.release.domain.enums.MagicGenre;
 import kr.magicbox.release.domain.enums.ReleaseLevel;
 import kr.magicbox.release.domain.vo.ReleaseId;
 import kr.magicbox.release.domain.vo.UserId;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.Set;
 
 @Builder
 public record UpdateReleaseCommand(
@@ -16,5 +18,6 @@ public record UpdateReleaseCommand(
         Long price,
         Integer limitedQuantity,
         ReleaseLevel level,
-        List<MediaCommand> mediaList
+        List<MediaCommand> mediaList,
+        Set<MagicGenre> categories
 ) {}

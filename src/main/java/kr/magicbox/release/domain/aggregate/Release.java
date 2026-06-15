@@ -1,5 +1,6 @@
 package kr.magicbox.release.domain.aggregate;
 
+import kr.magicbox.release.domain.enums.MagicGenre;
 import kr.magicbox.release.domain.enums.ReleaseLevel;
 import kr.magicbox.release.domain.enums.ReleaseStatus;
 import kr.magicbox.release.domain.exception.InvalidFieldException;
@@ -28,6 +29,7 @@ public class Release {
     private Long price;
     private Integer limitedQuantity;
     private Integer soldQuantity;
+    private Set<MagicGenre> categories;
     private final Instant scheduledAt;
     private final Instant createdAt;
     private Instant updatedAt;
@@ -35,8 +37,8 @@ public class Release {
     @Builder(builderMethodName = "createBuilder", builderClassName = "CreateBuilder")
     public Release(CreatorId creatorId, String title, String description,
                    List<ReleaseMedia> mediaList, ReleaseLevel level, Long price,
-                   Integer limitedQuantity, Instant scheduledAt) {
-        validateCreate(creatorId, title, price, limitedQuantity, scheduledAt, mediaList);
+                   Integer limitedQuantity, Set<MagicGenre> categories, Instant scheduledAt) {
+        validateCreate(creatorId, title, price, limitedQuantity, scheduledAt, mediaList, categories);
         this.id = null;
         this.creatorId = creatorId;
         this.title = title;
@@ -47,6 +49,7 @@ public class Release {
         this.price = price;
         this.limitedQuantity = limitedQuantity;
         this.soldQuantity = 0;
+        this.categories = categories;
         this.scheduledAt = scheduledAt;
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
@@ -56,9 +59,9 @@ public class Release {
     public Release(ReleaseId id, CreatorId creatorId, String title, String description,
                    List<ReleaseMedia> mediaList, ReleaseLevel level, ReleaseStatus status,
                    Long price, Integer limitedQuantity, Integer soldQuantity,
-                   Instant scheduledAt, Instant createdAt, Instant updatedAt) {
+                   Set<MagicGenre> categories, Instant scheduledAt, Instant createdAt, Instant updatedAt) {
         validateReconstruct(id, creatorId, title, level, status, price, limitedQuantity, soldQuantity,
-                scheduledAt, createdAt, updatedAt);
+                scheduledAt, createdAt, updatedAt, categories);
         this.id = id;
         this.creatorId = creatorId;
         this.title = title;
@@ -69,6 +72,7 @@ public class Release {
         this.price = price;
         this.limitedQuantity = limitedQuantity;
         this.soldQuantity = soldQuantity;
+        this.categories = categories;
         this.scheduledAt = scheduledAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -76,20 +80,22 @@ public class Release {
 
     private void validateCreate(CreatorId creatorId, String title, Long price,
                                 Integer limitedQuantity, Instant scheduledAt,
-                                List<ReleaseMedia> mediaList) {
+                                List<ReleaseMedia> mediaList, Set<MagicGenre> categories) {
         if (creatorId == null) throw new InvalidFieldException("크리에이터 ID는 필수입니다.");
         if (title == null || title.isBlank()) throw new InvalidFieldException("제목은 필수입니다.");
         if (price == null || price <= 0) throw new InvalidFieldException("가격은 양수여야 합니다.");
         if (limitedQuantity == null || limitedQuantity <= 0) throw new InvalidFieldException("한정 수량은 양수여야 합니다.");
         if (scheduledAt == null) throw new InvalidFieldException("판매 예정 시각은 필수입니다.");
         if (mediaList == null || mediaList.isEmpty()) throw new InvalidFieldException("미디어는 하나 이상 필수입니다.");
+        if (categories == null || categories.isEmpty()) throw new InvalidFieldException("카테고리는 하나 이상 필수입니다.");
         validateMediaSortOrder(mediaList);
     }
 
     private void validateReconstruct(ReleaseId id, CreatorId creatorId, String title,
                                      ReleaseLevel level, ReleaseStatus status,
                                      Long price, Integer limitedQuantity, Integer soldQuantity,
-                                     Instant scheduledAt, Instant createdAt, Instant updatedAt) {
+                                     Instant scheduledAt, Instant createdAt, Instant updatedAt,
+                                     Set<MagicGenre> categories) {
         if (id == null) throw new InvalidFieldException("릴리즈 ID는 필수입니다.");
         if (creatorId == null) throw new InvalidFieldException("크리에이터 ID는 필수입니다.");
         if (title == null || title.isBlank()) throw new InvalidFieldException("제목은 필수입니다.");
@@ -101,6 +107,7 @@ public class Release {
         if (scheduledAt == null) throw new InvalidFieldException("판매 예정 시각은 필수입니다.");
         if (createdAt == null) throw new InvalidFieldException("생성 시각은 필수입니다.");
         if (updatedAt == null) throw new InvalidFieldException("수정 시각은 필수입니다.");
+        if (categories == null || categories.isEmpty()) throw new InvalidFieldException("카테고리는 하나 이상 필수입니다.");
     }
 
     private void validateMediaSortOrder(List<ReleaseMedia> mediaList) {
@@ -148,7 +155,7 @@ public class Release {
         this.updatedAt = Instant.now();
     }
 
-    public void update(String title, String description, Long price, Integer limitedQuantity, ReleaseLevel level, List<ReleaseMedia> mediaList) {
+    public void update(String title, String description, Long price, Integer limitedQuantity, ReleaseLevel level, List<ReleaseMedia> mediaList, Set<MagicGenre> categories) {
         if (title != null && !title.isBlank()) this.title = title;
         if (description != null) this.description = description;
         if (price != null) this.price = price;
@@ -163,6 +170,7 @@ public class Release {
             validateMediaSortOrder(mediaList);
             this.mediaList = List.copyOf(mediaList);
         }
+        if (categories != null && !categories.isEmpty()) this.categories = categories;
         this.updatedAt = Instant.now();
     }
 
