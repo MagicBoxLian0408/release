@@ -80,6 +80,17 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
                 .toList();
     }
 
+    @Override
+    public Long findCreatorIdById(Long id) {
+        return releaseJpaRepository.findCreatorIdById(id)
+                .orElseThrow(ReleaseNotFoundException::new);
+    }
+
+    @Override
+    public int increaseSoldQuantity(Long id, int quantity) {
+        return releaseJpaRepository.increaseSoldQuantity(id, quantity);
+    }
+
     private void syncMediaList(ReleaseEntity entity, List<ReleaseMedia> newMediaList) {
         Set<String> incomingKeys = newMediaList.stream()
                 .map(m -> m.getMediaUrl() + "|" + m.getSortOrder())

@@ -20,9 +20,6 @@ import java.util.Set;
 @Table(name = "releases")
 public class ReleaseEntity extends BaseEntity {
 
-    @Version
-    private Long version;
-
     @Column(name = "creator_id", nullable = false)
     private Long creatorId;
 

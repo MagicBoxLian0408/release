@@ -4,12 +4,9 @@ import kr.magicbox.release.adapter.in.kafka.event.StockReserveCommandEvent;
 import kr.magicbox.release.application.port.in.HandleStockReserveUseCase;
 import kr.magicbox.release.application.port.out.ReleaseOutboxPort;
 import kr.magicbox.release.application.port.out.ReleaseRepositoryPort;
-import kr.magicbox.release.domain.aggregate.Release;
 import kr.magicbox.release.domain.event.StockReserveFailedEvent;
 import kr.magicbox.release.domain.event.StockReserveSucceededEvent;
 import kr.magicbox.release.domain.exception.ReleaseNotFoundException;
-import kr.magicbox.release.domain.exception.ReleaseStatusConflictException;
-import kr.magicbox.release.domain.vo.ReleaseId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,26 +41,23 @@ public class HandleStockReserveService implements HandleStockReserveUseCase {
         List<StockReserveSucceededEvent.ItemPayload> succeededItems = new ArrayList<>();
         for (StockReserveCommandEvent.ItemPayload item : event.items()) {
             Long releaseId = item.productId();
-            try {
-                Release release = releaseRepositoryPort.findById(ReleaseId.of(releaseId));
-                release.increaseSoldQuantity();
-                releaseRepositoryPort.update(release);
-                succeededItems.add(StockReserveSucceededEvent.ItemPayload.builder()
-                        .orderLineId(item.orderLineId())
-                        .sellerId(release.getCreatorId().value())
-                        .amount((long) item.quantity() * item.unitPrice())
-                        .build());
-            } catch (ReleaseNotFoundException | ReleaseStatusConflictException e) {
-                log.warn("[StockReserve] 재고 예약 실패. orderId={}, releaseId={}, reason={}",
-                        event.orderId(), releaseId, e.getMessage());
+            int updated = releaseRepositoryPort.increaseSoldQuantity(releaseId, item.quantity());
+            if (updated == 0) {
+                log.warn("[StockReserve] 재고 예약 실패. orderId={}, releaseId={}", event.orderId(), releaseId);
                 releaseOutboxPort.save(StockReserveFailedEvent.builder()
                         .orderId(event.orderId())
                         .customerId(event.customerId())
-                        .reason(e.getMessage())
+                        .reason("재고 부족 또는 판매 중 상태 아님")
                         .occurredAt(Instant.now())
                         .build());
                 return;
             }
+            Long sellerId = releaseRepositoryPort.findCreatorIdById(releaseId);
+            succeededItems.add(StockReserveSucceededEvent.ItemPayload.builder()
+                    .orderLineId(item.orderLineId())
+                    .sellerId(sellerId)
+                    .amount((long) item.quantity() * item.unitPrice())
+                    .build());
         }
 
         log.info("[StockReserve] 재고 예약 성공. orderId={}", event.orderId());

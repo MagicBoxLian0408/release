@@ -21,9 +21,9 @@ public class OrchestratorCommandKafkaListener {
 
     @Idempotent
     @RetryableTopic(dltStrategy = DltStrategy.FAIL_ON_ERROR, dltTopicSuffix = "-dlt", exclude = {BusinessException.class})
-    @KafkaListener(topics = "outbox.event.stock-reserve.release", groupId = "release-service")
+    @KafkaListener(topics = "outbox.event.stock-reserve-release", groupId = "release-service")
     public void handleStockReserve(ConsumerRecord<String, StockReserveCommandEvent> consumerRecord) {
-        log.info("[Inbox] stock-reserve.release 커맨드 수신. key={}", consumerRecord.key());
+        log.info("[Inbox] stock-reserve-release 커맨드 수신. key={}", consumerRecord.key());
         handleStockReserveUseCase.handleStockReserve(consumerRecord.value());
     }
 }
