@@ -22,4 +22,8 @@ public interface ReleaseRepositoryPort {
     List<Release> findScheduledBefore(Instant scheduledAt, int limit);
 
     List<Release> findAllByCursor(Long cursorId, int size);
+
+    Long findCreatorIdById(Long id);
+
+    int increaseSoldQuantity(Long id, int quantity);
 }
