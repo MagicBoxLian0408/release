@@ -37,7 +37,7 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
         ReleaseEntity entity = releaseJpaRepository.findById(release.getId().value())
                 .orElseThrow(ReleaseNotFoundException::new);
         entity.update(release.getStatus(), release.getSoldQuantity());
-        entity.updateContent(release.getTitle(), release.getDescription(), release.getPrice(), release.getLimitedQuantity(), release.getLevel(), release.getCategories());
+        entity.updateContent(release.getTitle(), release.getDescription());
         syncMediaList(entity, release.getMediaList());
         releaseJpaRepository.save(entity);
     }
@@ -89,6 +89,13 @@ public class ReleaseJpaAdapter implements ReleaseRepositoryPort {
     @Override
     public int increaseSoldQuantity(Long id, int quantity) {
         return releaseJpaRepository.increaseSoldQuantity(id, quantity);
+    }
+
+    @Override
+    public void delete(ReleaseId id) {
+        ReleaseEntity entity = releaseJpaRepository.findById(id.value())
+                .orElseThrow(ReleaseNotFoundException::new);
+        releaseJpaRepository.delete(entity);
     }
 
     private void syncMediaList(ReleaseEntity entity, List<ReleaseMedia> newMediaList) {
