@@ -26,4 +26,6 @@ public interface ReleaseRepositoryPort {
     Long findCreatorIdById(Long id);
 
     int increaseSoldQuantity(Long id, int quantity);
+
+    void delete(ReleaseId id);
 }
