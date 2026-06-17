@@ -5,7 +5,6 @@ import kr.magicbox.release.application.port.out.ReleaseRepositoryPort;
 import kr.magicbox.release.domain.aggregate.Release;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,7 +18,6 @@ public class AutoStartSaleService implements AutoStartSaleUseCase {
     private final ReleaseRepositoryPort releaseRepositoryPort;
     private final AutoStartSaleChunkService autoStartSaleChunkService;
 
-    @Transactional(readOnly = true)
     @Override
     public void autoStartScheduledReleases() {
         List<Release> chunk;
