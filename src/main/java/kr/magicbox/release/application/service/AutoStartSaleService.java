@@ -19,7 +19,7 @@ public class AutoStartSaleService implements AutoStartSaleUseCase {
     private final ReleaseRepositoryPort releaseRepositoryPort;
     private final AutoStartSaleChunkService autoStartSaleChunkService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public void autoStartScheduledReleases() {
         List<Release> chunk;
