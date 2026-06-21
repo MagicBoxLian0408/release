@@ -23,5 +23,9 @@ public interface ReleaseRepositoryPort {
 
     List<Release> findAllByCursor(Long cursorId, int size);
 
+    Long findCreatorIdById(Long id);
+
+    int increaseSoldQuantity(Long id, int quantity);
+
     void delete(ReleaseId id);
 }
