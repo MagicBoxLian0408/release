@@ -33,7 +33,7 @@ public class UpdateReleaseService implements UpdateReleaseUseCase {
     public void updateRelease(UpdateReleaseCommand command) {
         Release release = releaseRepositoryPort.findById(command.releaseId());
 
-        CreatorId creatorId = creatorIdQueryPort.getCreatorId(command.userId());
+        CreatorId creatorId = creatorIdQueryPort.getCreatorId(command.userId()).join();
         if (!release.getCreatorId().equals(creatorId)) {
             throw new ReleaseUnauthorizedException();
         }
@@ -48,7 +48,7 @@ public class UpdateReleaseService implements UpdateReleaseUseCase {
                 .map(list -> list.stream().map(this::toReleaseMedia).toList())
                 .orElse(null);
 
-        release.update(command.title(), command.description(), command.price(), command.limitedQuantity(), command.level(), mediaList, command.categories());
+        release.update(command.title(), command.description(), mediaList);
         releaseRepositoryPort.update(release);
 
         ReleaseSnapshot after = new ReleaseSnapshot(

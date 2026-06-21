@@ -16,7 +16,7 @@ public class RegisterReleaseService implements RegisterReleaseUseCase {
 
     @Override
     public Long registerRelease(RegisterReleaseCommand command) {
-        CreatorId creatorId = creatorIdQueryPort.getCreatorId(command.userId());
+        CreatorId creatorId = creatorIdQueryPort.getCreatorId(command.userId()).join();
         return registerReleaseTxService.save(creatorId, command);
     }
 }
