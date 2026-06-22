@@ -13,7 +13,7 @@ public record StockReserveSucceededEvent(
         @JsonProperty("total_amount") Long totalAmount,
         @JsonProperty("items") List<ItemPayload> items,
         @JsonProperty("occurred_at") Instant occurredAt
-) implements ReleaseDomainEvent {
+) implements ReleaseDomainEvent, OrderIdAware {
 
     @Builder
     public record ItemPayload(
