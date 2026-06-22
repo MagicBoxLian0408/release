@@ -23,14 +23,10 @@ public class ReleaseOutboxEntity extends BaseEntity {
     @Column(nullable = false, columnDefinition = "JSON")
     private String payload;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
     @Builder
-    public ReleaseOutboxEntity(String eventType, String aggregateKey, String payload, Long orderId) {
+    public ReleaseOutboxEntity(String eventType, String aggregateKey, String payload) {
         this.eventType = eventType;
         this.aggregateKey = aggregateKey;
         this.payload = payload;
-        this.orderId = orderId;
     }
 }

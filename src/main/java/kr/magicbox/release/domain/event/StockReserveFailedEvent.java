@@ -11,7 +11,7 @@ public record StockReserveFailedEvent(
         @JsonProperty("customer_id") Long customerId,
         @JsonProperty("reason") String reason,
         @JsonProperty("occurred_at") Instant occurredAt
-) implements ReleaseDomainEvent, OrderIdAware {
+) implements ReleaseDomainEvent {
 
     @Override
     public String key() {
