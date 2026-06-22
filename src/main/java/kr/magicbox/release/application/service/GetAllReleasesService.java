@@ -16,8 +16,8 @@ public class GetAllReleasesService implements GetAllReleasesUseCase {
 
     private final ReleaseRepositoryPort releaseRepositoryPort;
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public List<ReleaseResult> getAllReleases(GetAllReleasesQuery query) {
         return releaseRepositoryPort.findAllByCursor(query.cursorId(), query.size() + 1)
                 .stream()

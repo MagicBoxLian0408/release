@@ -23,12 +23,12 @@ public class DeleteReleaseService implements DeleteReleaseUseCase {
     private final CreatorIdQueryPort creatorIdQueryPort;
     private final ReleaseOutboxPort releaseOutboxPort;
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteRelease(DeleteReleaseCommand command) {
         Release release = releaseRepositoryPort.findById(command.releaseId());
 
-        CreatorId creatorId = creatorIdQueryPort.getCreatorId(command.userId());
+        CreatorId creatorId = creatorIdQueryPort.getCreatorId(command.userId()).join();
         if (!release.getCreatorId().equals(creatorId)) {
             throw new ReleaseUnauthorizedException();
         }
