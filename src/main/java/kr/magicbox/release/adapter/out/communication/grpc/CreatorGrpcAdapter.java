@@ -1,6 +1,5 @@
 package kr.magicbox.release.adapter.out.communication.grpc;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import io.grpc.ManagedChannel;
@@ -13,7 +12,6 @@ import kr.magicbox.release.domain.vo.CreatorId;
 import kr.magicbox.release.domain.vo.UserId;
 import kr.magicbox.release.grpc.creator.CreatorServiceGrpc;
 import kr.magicbox.release.grpc.creator.GetCreatorIdByUserIdRequest;
-import kr.magicbox.release.grpc.creator.GetCreatorIdByUserIdResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,22 +29,11 @@ public class CreatorGrpcAdapter implements CreatorIdQueryPort {
     @CircuitBreaker(name = "creatorService", fallbackMethod = "getCreatorIdFallback")
     @TimeLimiter(name = "creatorService", fallbackMethod = "getCreatorIdFallback")
     public CompletableFuture<CreatorId> getCreatorId(UserId userId) {
-        GetCreatorIdByUserIdRequest request = GetCreatorIdByUserIdRequest.newBuilder()
-                .setUserId(userId.value())
-                .build();
-
-        CreatorServiceGrpc.CreatorServiceFutureStub stub = CreatorServiceGrpc.newFutureStub(creatorManagedChannel);
-        ListenableFuture<GetCreatorIdByUserIdResponse> future = stub.getCreatorIdByUserId(request);
-
-        CompletableFuture<CreatorId> result = new CompletableFuture<>();
-        future.addListener(() -> {
-            try {
-                result.complete(new CreatorId(future.get().getCreatorId()));
-            } catch (Exception e) {
-                result.completeExceptionally(e);
-            }
-        }, Runnable::run);
-        return result;
+        return GrpcFutures.toCompletable(
+                CreatorServiceGrpc.newFutureStub(creatorManagedChannel).getCreatorIdByUserId(
+                        GetCreatorIdByUserIdRequest.newBuilder().setUserId(userId.value()).build()
+                )
+        ).thenApply(response -> new CreatorId(response.getCreatorId()));
     }
 
     @SuppressWarnings("unused")
