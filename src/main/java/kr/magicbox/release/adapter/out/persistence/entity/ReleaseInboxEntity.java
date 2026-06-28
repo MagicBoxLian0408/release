@@ -47,4 +47,8 @@ public class ReleaseInboxEntity extends BaseEntity {
     public void markProcessed() {
         this.status = ReleaseInboxStatus.PROCESSED;
     }
+
+    public void markDeadLettered() {
+        this.status = ReleaseInboxStatus.DEAD_LETTERED;
+    }
 }
